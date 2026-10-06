@@ -12,4 +12,6 @@ public:
 
     Piece();
     Piece(string type, string color);
+
+    bool pawn_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent);
 };

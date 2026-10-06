@@ -55,26 +55,40 @@ int main(void)
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            if (!is_square_selected and board.board[rank][file - 'a' + 1].piece.type != "")
+            if (!is_square_selected and board.board[rank][file - 'a' + 1].piece.type != "") // select the piece
             {
                 selected_square = std::make_pair(file, rank);
                 is_square_selected = true;
             }
-            else
+            else // move to destination
             {
                 destination = std::make_pair(file, rank);
-                board.board[destination.second][destination.first - 'a' + 1].piece =
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                bool is_destination_empty = board.board[destination.second][destination.first - 'a' + 1].piece.type == "";
+                bool opponent = !is_destination_empty and
+                                board.board[destination.second][destination.first - 'a' + 1].piece.color !=
+                                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.color;
+
+                // Pawn legal moves
+                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "pawn" and
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.pawn_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+                {
+                    board.board[destination.second][destination.first - 'a' + 1].piece =
+                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                }
+
                 is_square_selected = false;
             }
         }
+
+        // highlighting selected square
         if (is_square_selected)
         {
             DrawRectangleLines((selected_square.first - 'a') * SQUARE_DIMENSION,
                                (8 - selected_square.second) * SQUARE_DIMENSION,
                                SQUARE_DIMENSION, SQUARE_DIMENSION, RED);
         }
+
         EndDrawing();
     }
 
