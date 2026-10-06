@@ -4,9 +4,11 @@
 #include <vector>
 using std::vector;
 
-class Board{
+class Board
+{
 public:
     vector<vector<Square>> board;
     Board();
-};
 
+    void intialize_board();
+};
