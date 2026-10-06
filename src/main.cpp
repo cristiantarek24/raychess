@@ -15,6 +15,7 @@ int main(void)
 
     Board board;
     pair<char, int> selected_square;
+    pair<char, int> destination;
     bool is_square_selected = false;
 
     while (!WindowShouldClose())
@@ -38,7 +39,10 @@ int main(void)
                 file_increment += SQUARE_DIMENSION;
                 if (board.board[rank][file - 'a' + 1].piece.type != "")
                 {
-                    DrawTexture(board.board[rank][file - 'a' + 1].piece.texture, file_increment - SQUARE_DIMENSION / 2 - board.board[rank][file - 'a' + 1].piece.texture.width / 2, rank_increment + SQUARE_DIMENSION / 2 - board.board[rank][file - 'a' + 1].piece.texture.height / 2, WHITE);
+                    DrawTexture(board.board[rank][file - 'a' + 1].piece.texture,
+                                file_increment - SQUARE_DIMENSION / 2 - board.board[rank][file - 'a' + 1].piece.texture.width / 2,
+                                rank_increment + SQUARE_DIMENSION / 2 - board.board[rank][file - 'a' + 1].piece.texture.height / 2,
+                                WHITE);
                 }
             }
             rank_increment += SQUARE_DIMENSION;
@@ -51,17 +55,26 @@ int main(void)
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            selected_square = std::make_pair(file, rank);
-            is_square_selected = true;
+            if (!is_square_selected and board.board[rank][file - 'a' + 1].piece.type != "")
+            {
+                selected_square = std::make_pair(file, rank);
+                is_square_selected = true;
+            }
+            else
+            {
+                destination = std::make_pair(file, rank);
+                board.board[destination.second][destination.first - 'a' + 1].piece =
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                is_square_selected = false;
+            }
         }
         if (is_square_selected)
         {
-            if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type != "")
-            {
-                DrawRectangleLines((selected_square.first - 'a') * SQUARE_DIMENSION, (8 - selected_square.second) * SQUARE_DIMENSION, SQUARE_DIMENSION, SQUARE_DIMENSION, RED);
-            }
+            DrawRectangleLines((selected_square.first - 'a') * SQUARE_DIMENSION,
+                               (8 - selected_square.second) * SQUARE_DIMENSION,
+                               SQUARE_DIMENSION, SQUARE_DIMENSION, RED);
         }
-
         EndDrawing();
     }
 
