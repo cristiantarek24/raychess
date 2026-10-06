@@ -11,4 +11,5 @@ public:
     Board();
 
     void intialize_board();
+    bool path_is_clear(char file, int rank, char file_destination, int rank_destination);
 };

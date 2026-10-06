@@ -42,3 +42,15 @@ bool Piece::pawn_legal_moves(char file, int rank, char file_destination, int ran
 
     return false;
 }
+
+bool Piece::rook_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent)
+{
+    if ((file == file_destination and rank != rank_destination) or (rank == rank_destination and file != file_destination))
+    {
+        if (is_destination_empty or (!is_destination_empty and opponent))
+        {
+            return true;
+        }
+    }
+    return false;
+}

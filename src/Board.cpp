@@ -1,4 +1,5 @@
 #include "Board.h"
+#include <algorithm>
 
 void Board::intialize_board()
 {
@@ -76,4 +77,23 @@ Board::Board() : board(9, vector<Square>(9))
         }
     }
     intialize_board();
+}
+
+bool Board::path_is_clear(char file, int rank, char file_destination, int rank_destination)
+{
+    char start_file = std::min(file, file_destination) + 1, end_file = std::max(file, file_destination);
+    int start_rank = std::min(rank, rank_destination) + 1, end_rank = std::max(rank, rank_destination);
+    for (int i = start_rank; i < end_rank; i++)
+    {
+        if (board[i][file - 'a' + 1].piece.type != "")
+            return false;
+    }
+
+    for (int i = start_file; i < end_file; i++)
+    {
+        if (board[rank][i - 'a' + 1].piece.type != "")
+            return false;
+    }
+
+    return true;
 }
