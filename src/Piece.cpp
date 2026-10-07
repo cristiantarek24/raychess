@@ -1,4 +1,5 @@
 #include "Piece.h"
+#include <cmath>
 
 Piece::Piece() : type(""), color("") {}
 Piece::Piece(string type, string color) : type(type), color(color)
@@ -48,6 +49,19 @@ bool Piece::rook_legal_moves(char file, int rank, char file_destination, int ran
     if ((file == file_destination and rank != rank_destination) or (rank == rank_destination and file != file_destination))
     {
         if (is_destination_empty or (!is_destination_empty and opponent))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Piece::knight_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent)
+{
+    if ((is_destination_empty or opponent))
+    {
+        if ((abs(rank - rank_destination) == 2 and abs(file - file_destination) == 1) or
+            (abs(rank - rank_destination) == 1 and abs(file - file_destination) == 2))
         {
             return true;
         }

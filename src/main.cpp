@@ -27,6 +27,7 @@ int main(void)
 
         DrawText("Welcome, RayChess!", 190, 200, 20, LIGHTGRAY);
 
+        // Rendring the board
         int rank_increment = 0;
         for (int rank = 8; rank >= 1; rank--)
         {
@@ -81,6 +82,15 @@ int main(void)
                 if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "rook" and
                     board.board[selected_square.second][selected_square.first - 'a' + 1].piece.rook_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
                     board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+                {
+                    board.board[destination.second][destination.first - 'a' + 1].piece =
+                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                }
+
+                // Knight legal movrs
+                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "knight" and
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.knight_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
                 {
                     board.board[destination.second][destination.first - 'a' + 1].piece =
                         board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
