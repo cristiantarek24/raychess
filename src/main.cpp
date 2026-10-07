@@ -117,6 +117,15 @@ int main(void)
                     board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
                 }
 
+                // King legal moves
+                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "king" and
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.king_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+                {
+                    board.board[destination.second][destination.first - 'a' + 1].piece =
+                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                }
+
                 is_square_selected = false;
             }
         }

@@ -18,4 +18,5 @@ public:
     bool knight_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent);
     bool bishop_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent);
     bool queen_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent);
+    bool king_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent);
 };

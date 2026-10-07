@@ -92,3 +92,13 @@ bool Piece::queen_legal_moves(char file, int rank, char file_destination, int ra
     else
         return false;
 }
+
+bool Piece::king_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent)
+{
+    if (abs(file - file_destination) == 0 and abs(rank - rank_destination) == 0)
+        return false;
+    if (is_destination_empty or opponent)
+        return (abs(file - file_destination) <= 1 and abs(rank - rank_destination) <= 1);
+    else
+        return false;
+}
