@@ -68,3 +68,27 @@ bool Piece::knight_legal_moves(char file, int rank, char file_destination, int r
     }
     return false;
 }
+
+bool Piece::bishop_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent)
+{
+    if (is_destination_empty or opponent)
+    {
+        if (abs(file - file_destination) == abs(rank - rank_destination))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Piece::queen_legal_moves(char file, int rank, char file_destination, int rank_destination, bool is_destination_empty, bool opponent)
+{
+    if ((file == file_destination and rank != rank_destination) or (rank == rank_destination and file != file_destination))
+    {
+        return rook_legal_moves(file, rank, file_destination, rank_destination, is_destination_empty, opponent);
+    }
+    else if (abs(file - file_destination) == abs(rank - rank_destination))
+        return bishop_legal_moves(file, rank, file_destination, rank_destination, is_destination_empty, opponent);
+    else
+        return false;
+}

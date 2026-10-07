@@ -97,6 +97,26 @@ int main(void)
                     board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
                 }
 
+                // Bishop legal moves
+                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "bishop" and
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.bishop_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
+                    board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+                {
+                    board.board[destination.second][destination.first - 'a' + 1].piece =
+                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                }
+
+                // Queen legal moves
+                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "queen" and
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.queen_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
+                    board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+                {
+                    board.board[destination.second][destination.first - 'a' + 1].piece =
+                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
+                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                }
+
                 is_square_selected = false;
             }
         }

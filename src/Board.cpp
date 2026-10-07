@@ -1,5 +1,4 @@
 #include "Board.h"
-#include <algorithm>
 
 void Board::intialize_board()
 {
@@ -81,18 +80,62 @@ Board::Board() : board(9, vector<Square>(9))
 
 bool Board::path_is_clear(char file, int rank, char file_destination, int rank_destination)
 {
-    char start_file = std::min(file, file_destination) + 1, end_file = std::max(file, file_destination);
-    int start_rank = std::min(rank, rank_destination) + 1, end_rank = std::max(rank, rank_destination);
-    for (int i = start_rank; i < end_rank; i++)
+    int file_direction = 0, rank_direction = 0;
+    // horizontal
+    if (rank == rank_destination)
     {
-        if (board[i][file - 'a' + 1].piece.type != "")
-            return false;
+        if (file < file_destination)
+        {
+            file_direction = 1;
+        }
+        else
+        {
+            file_direction = -1;
+        }
+    }
+    // vertical
+    else if (file == file_destination)
+    {
+        if (rank < rank_destination)
+        {
+            rank_direction = 1;
+        }
+        else
+        {
+            rank_direction = -1;
+        }
+    }
+    // diagonal
+    else
+    {
+        if (rank < rank_destination)
+        {
+            rank_direction = 1;
+        }
+        else
+        {
+            rank_direction = -1;
+        }
+        if (file < file_destination)
+        {
+            file_direction = 1;
+        }
+        else
+        {
+            file_direction = -1;
+        }
     }
 
-    for (int i = start_file; i < end_file; i++)
+    rank += rank_direction, file += file_direction;
+    while (rank != rank_destination or file != file_destination)
     {
-        if (board[rank][i - 'a' + 1].piece.type != "")
+        if (board[rank][file - 'a' + 1].piece.type != "")
+        {
             return false;
+        }
+
+        rank += rank_direction;
+        file += file_direction;
     }
 
     return true;
