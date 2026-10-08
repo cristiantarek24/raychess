@@ -56,76 +56,34 @@ int main(void)
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            if (!is_square_selected and board.board[rank][file - 'a' + 1].piece.type != "") // select the piece
+            if (!is_square_selected) // select the piece
+            {
+                if (((board.board[rank][file - 'a' + 1].piece.color == "white" and board.white_turn) or
+                     (board.board[rank][file - 'a' + 1].piece.color == "black" and !board.white_turn)) and
+                    board.board[rank][file - 'a' + 1].piece.type != "")
+                {
+                    selected_square = std::make_pair(file, rank);
+                    is_square_selected = true;
+                }
+            }
+            // if selected same color piece
+            else if (is_square_selected and
+                     board.board[rank][file - 'a' + 1].piece.type != "" and
+                     board.board[rank][file - 'a' + 1].piece.color ==
+                         board.board[selected_square.second][selected_square.first - 'a' + 1].piece.color)
             {
                 selected_square = std::make_pair(file, rank);
                 is_square_selected = true;
             }
+
             else // move to destination
             {
                 destination = std::make_pair(file, rank);
-                bool is_destination_empty = board.board[destination.second][destination.first - 'a' + 1].piece.type == "";
-                bool opponent = !is_destination_empty and
-                                board.board[destination.second][destination.first - 'a' + 1].piece.color !=
-                                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.color;
 
-                // Pawn legal moves
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "pawn" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.pawn_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+                if (board.move_piece(selected_square, destination))
                 {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                    board.white_turn = !board.white_turn;
                 }
-
-                // Rook legal moves
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "rook" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.rook_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
-                    board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
-                {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
-                }
-
-                // Knight legal movrs
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "knight" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.knight_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
-                {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
-                }
-
-                // Bishop legal moves
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "bishop" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.bishop_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
-                    board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
-                {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
-                }
-
-                // Queen legal moves
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "queen" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.queen_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
-                    board.path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
-                {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
-                }
-
-                // King legal moves
-                if (board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "king" and
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.king_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
-                {
-                    board.board[destination.second][destination.first - 'a' + 1].piece =
-                        board.board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                    board.board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
-                }
-
                 is_square_selected = false;
             }
         }
