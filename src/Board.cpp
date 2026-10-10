@@ -142,6 +142,17 @@ bool Board::path_is_clear(char file, int rank, char file_destination, int rank_d
     return true;
 }
 
+void Board::move_piece_to_destination(pair<char, int> selected_square, pair<char, int> destination)
+{
+    bool is_destination_empty = board[destination.second][destination.first - 'a' + 1].piece.type == "";
+    if (!is_destination_empty)
+        UnloadTexture(board[destination.second][destination.first - 'a' + 1].piece.texture);
+    board[destination.second][destination.first - 'a' + 1].piece =
+        board[selected_square.second][selected_square.first - 'a' + 1].piece;
+
+    board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+}
+
 bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destination)
 {
     bool is_destination_empty = board[destination.second][destination.first - 'a' + 1].piece.type == "";
@@ -157,18 +168,14 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
         {
             if (path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
             {
-                board[destination.second][destination.first - 'a' + 1].piece =
-                    board[selected_square.second][selected_square.first - 'a' + 1].piece;
-                board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+                move_piece_to_destination(selected_square, destination);
                 return true;
             }
             else
                 return false;
         }
 
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
 
@@ -177,9 +184,7 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
         board[selected_square.second][selected_square.first - 'a' + 1].piece.rook_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
         path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
     {
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
 
@@ -187,9 +192,7 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
     if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "knight" and
         board[selected_square.second][selected_square.first - 'a' + 1].piece.knight_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
     {
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
 
@@ -198,9 +201,7 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
         board[selected_square.second][selected_square.first - 'a' + 1].piece.bishop_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
         path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
     {
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
 
@@ -209,9 +210,7 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
         board[selected_square.second][selected_square.first - 'a' + 1].piece.queen_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
         path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
     {
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
 
@@ -219,9 +218,7 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
     if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "king" and
         board[selected_square.second][selected_square.first - 'a' + 1].piece.king_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
     {
-        board[destination.second][destination.first - 'a' + 1].piece =
-            board[selected_square.second][selected_square.first - 'a' + 1].piece;
-        board[selected_square.second][selected_square.first - 'a' + 1].piece.type = "";
+        move_piece_to_destination(selected_square, destination);
         return true;
     }
     return false;
