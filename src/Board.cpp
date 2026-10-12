@@ -223,3 +223,76 @@ bool Board::move_piece(pair<char, int> selected_square, pair<char, int> destinat
     }
     return false;
 }
+
+bool Board::is_leagal_move(pair<char, int> selected_square, pair<char, int> destination)
+{
+    if (selected_square == destination)
+        return false;
+
+    if (selected_square.first < 'a' or selected_square.first > 'h' or
+        selected_square.second < 1 or selected_square.second > 8 or
+        destination.first < 'a' or destination.first > 'h' or
+        destination.second < 1 or destination.second > 8)
+        return false;
+
+    bool is_destination_empty = board[destination.second][destination.first - 'a' + 1].piece.type == "";
+    bool opponent = !is_destination_empty and
+                    board[destination.second][destination.first - 'a' + 1].piece.color !=
+                        board[selected_square.second][selected_square.first - 'a' + 1].piece.color;
+
+    // Pawn legal moves
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "pawn" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.pawn_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+    {
+        if (abs(destination.second - selected_square.second) == 2)
+        {
+            if (path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        return true;
+    }
+
+    // Rook legal moves
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "rook" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.rook_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
+        path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+    {
+        return true;
+    }
+
+    // Knight legal movrs
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "knight" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.knight_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+    {
+        return true;
+    }
+
+    // Bishop legal moves
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "bishop" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.bishop_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
+        path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+    {
+        return true;
+    }
+
+    // Queen legal moves
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "queen" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.queen_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent) and
+        path_is_clear(selected_square.first, selected_square.second, destination.first, destination.second))
+    {
+        return true;
+    }
+
+    // King legal moves
+    if (board[selected_square.second][selected_square.first - 'a' + 1].piece.type == "king" and
+        board[selected_square.second][selected_square.first - 'a' + 1].piece.king_legal_moves(selected_square.first, selected_square.second, destination.first, destination.second, is_destination_empty, opponent))
+    {
+        return true;
+    }
+    return false;
+}

@@ -51,6 +51,18 @@ int main(void)
                 Square s(file, rank, Piece());
                 Color color = s.color_detection(rank, file);
                 DrawRectangle(file_increment, rank_increment, SQUARE_DIMENSION, SQUARE_DIMENSION, color);
+
+                // Highlighting the valid squares
+                if (is_square_selected and board.is_leagal_move(selected_square, std::make_pair(file, rank)))
+                {
+                    bool is_capture = board.board[rank][file - 'a' + 1].piece.type != "";
+                    Color highlight = (is_capture ? Color{220, 50, 50, 120}
+                                                  : Color{0, 200, 0, 100});
+                    DrawRectangle(file_increment, rank_increment,
+                                  SQUARE_DIMENSION, SQUARE_DIMENSION,
+                                  highlight);
+                }
+
                 file_increment += SQUARE_DIMENSION;
                 if (board.board[rank][file - 'a' + 1].piece.type != "")
                 {
