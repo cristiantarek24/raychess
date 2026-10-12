@@ -12,10 +12,9 @@ A chess game built with C++ and raylib to practice OOP, software design, Git, an
 
 ## Status
 
-🚧 In development
+Under development
 
 ## Tech Stack
 
 * C++
 * raylib
-* Git / GitHub
