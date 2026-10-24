@@ -20,4 +20,6 @@ public:
     bool is_leagal_move(pair<char, int> selected_square, pair<char, int> destination);
     bool check(pair<char, int> pos);
     bool valid_move(pair<char, int> selected_square, pair<char, int> destination, pair<char, int> pos);
+    bool check_mate(pair<char, int> king_pos);
+    bool stale_mate(pair<char, int> king_pos);
 };

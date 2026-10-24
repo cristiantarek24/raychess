@@ -131,12 +131,12 @@ int main(void)
             else // move to destination
             {
                 destination = std::make_pair(file, rank);
-                
+
                 if (board.valid_move(selected_square, destination, king_pos))
                 {
                     board.move_piece_to_destination(selected_square, destination);
                     board.white_turn = !board.white_turn;
-                    
+
                     if (board.board[destination.second][destination.first - 'a' + 1].piece.type == "pawn")
                     {
                         if (destination.second == 1)
@@ -188,6 +188,11 @@ int main(void)
                     break;
                 }
             }
+        }
+
+        if (board.stale_mate(king_pos) or board.check_mate(king_pos))
+        {
+            cout << "Game Over\n";
         }
         // highlighting selected square
         if (is_square_selected)

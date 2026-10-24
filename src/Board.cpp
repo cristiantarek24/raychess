@@ -350,3 +350,34 @@ bool Board::valid_move(pair<char, int> selected_square, pair<char, int> destinat
 
     return !king_in_check;
 }
+
+bool Board::check_mate(pair<char, int> king_pos)
+{
+    return stale_mate(king_pos) and check(king_pos);
+}
+
+bool Board::stale_mate(pair<char, int> king_pos)
+{
+    pair<char, int> selected, destination;
+    string color = white_turn ? "white" : "black";
+    for (int rank = 1; rank <= 8; rank++)
+    {
+        for (char file = 'a'; file <= 'h'; file++)
+        {
+            Square current = board[rank][file - 'a' + 1];
+            if (current.piece.type == "" or current.piece.color != color)
+                continue;
+            selected = {file, rank};
+            for (int r = 1; r <= 8; r++)
+            {
+                for (char f = 'a'; f <= 'h'; f++)
+                {
+                    destination = {f, r};
+                    if (valid_move(selected, destination, king_pos))
+                        return false;
+                }
+            }
+        }
+    }
+    return true;
+}
