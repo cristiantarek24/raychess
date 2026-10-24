@@ -18,4 +18,6 @@ public:
     bool move_piece(pair<char, int> source, pair<char, int> destination);
     void move_piece_to_destination(pair<char, int> selected_square, pair<char, int> destination);
     bool is_leagal_move(pair<char, int> selected_square, pair<char, int> destination);
+    bool check(pair<char, int> pos);
+    bool valid_move(pair<char, int> selected_square, pair<char, int> destination, pair<char, int> pos);
 };

@@ -16,8 +16,13 @@ int main(void)
     Board board;
     pair<char, int> selected_square;
     pair<char, int> destination;
+    pair<char, int> white_king;
+    pair<char, int> black_king;
+    pair<char, int> king_pos = board.white_turn ? white_king : black_king;
+
     bool is_square_selected = false;
     bool promotion_pending = false;
+    bool checked = false;
     pair<char, int> promotion_square;
     const vector<string> pormotion_pieces = {"queen", "rook", "bishop", "knight"};
     vector<Piece> black_pormotion(4), white_pormotion(4);
@@ -41,6 +46,25 @@ int main(void)
 
         DrawText("Welcome, RayChess!", 190, 200, 20, LIGHTGRAY);
 
+        // King Check
+        for (int rank = 1; rank <= 8; rank++)
+        {
+            for (char file = 'a'; file <= 'h'; file++)
+            {
+                Piece &piece = board.board[rank][file - 'a' + 1].piece;
+
+                if (piece.type == "king")
+                {
+                    if (piece.color == "white")
+                        white_king = {file, rank};
+                    else
+                        black_king = {file, rank};
+                }
+            }
+        }
+
+        king_pos = board.white_turn ? white_king : black_king;
+
         // Rendring the board
         int rank_increment = 0;
         for (int rank = 8; rank >= 1; rank--)
@@ -53,7 +77,7 @@ int main(void)
                 DrawRectangle(file_increment, rank_increment, SQUARE_DIMENSION, SQUARE_DIMENSION, color);
 
                 // Highlighting the valid squares
-                if (is_square_selected and board.is_leagal_move(selected_square, std::make_pair(file, rank)))
+                if (is_square_selected and board.valid_move(selected_square, std::make_pair(file, rank), king_pos))
                 {
                     bool is_capture = board.board[rank][file - 'a' + 1].piece.type != "";
                     Color highlight = (is_capture ? Color{220, 50, 50, 120}
@@ -80,6 +104,8 @@ int main(void)
         char file = char(mouseX / SQUARE_DIMENSION + 'a');
         int rank = 8 - (mouseY / SQUARE_DIMENSION);
 
+        checked = (board.check(white_king) or board.check(black_king));
+
         if (!promotion_pending and IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             if (!is_square_selected) // select the piece
@@ -105,9 +131,12 @@ int main(void)
             else // move to destination
             {
                 destination = std::make_pair(file, rank);
-                if (board.move_piece(selected_square, destination))
+                
+                if (board.valid_move(selected_square, destination, king_pos))
                 {
+                    board.move_piece_to_destination(selected_square, destination);
                     board.white_turn = !board.white_turn;
+                    
                     if (board.board[destination.second][destination.first - 'a' + 1].piece.type == "pawn")
                     {
                         if (destination.second == 1)

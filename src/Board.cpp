@@ -296,3 +296,57 @@ bool Board::is_leagal_move(pair<char, int> selected_square, pair<char, int> dest
     }
     return false;
 }
+
+bool Board::check(pair<char, int> pos)
+{
+    Piece &king = board[pos.second][pos.first - 'a' + 1].piece;
+    for (int rank = 1; rank <= 8; rank++)
+    {
+        for (char file = 'a'; file <= 'h'; file++)
+        {
+            Piece &piece = board[rank][file - 'a' + 1].piece;
+
+            if (piece.type == "" || piece.color == king.color)
+                continue;
+
+            if (piece.type == "pawn")
+            {
+                int direction = (piece.color == "white") ? 1 : -1;
+
+                if (rank + direction == pos.second &&
+                    abs(file - pos.first) == 1)
+                {
+                    return true;
+                }
+
+                continue;
+            }
+            if (is_leagal_move({file, rank}, pos))
+                return true;
+        }
+    }
+    return false;
+}
+
+bool Board::valid_move(pair<char, int> selected_square, pair<char, int> destination, pair<char, int> pos)
+{
+    if (!is_leagal_move(selected_square, destination))
+        return false;
+    Piece p1 = board[selected_square.second][selected_square.first - 'a' + 1].piece;
+    Piece p2 = board[destination.second][destination.first - 'a' + 1].piece;
+    int rs = selected_square.second, rd = destination.second;
+    int fs = selected_square.first - 'a' + 1, fd = destination.first - 'a' + 1;
+
+    board[rd][fd].piece = p1;
+    board[rs][fs].piece.type = "";
+    pair<char, int> new_king_pos = pos;
+    if (p1.type == "king")
+        new_king_pos = destination;
+
+    bool king_in_check = check(new_king_pos);
+
+    board[rs][fs].piece = p1;
+    board[rd][fd].piece = p2;
+
+    return !king_in_check;
+}
